@@ -7,72 +7,14 @@ import dateutil.parser
 import babel
 import sys
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+from models import  Venue, Artist, Show, app
 
-
-#----------------------------------------------------------------------------#
-# App Config.
-#----------------------------------------------------------------------------#
-
-app = Flask(__name__)
-moment = Moment(app)
+# app config
 app.config.from_object('config')
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-
-class Venue(db.Model):
-    __tablename__ = 'venues'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean())
-    seeking_description = db.Column(db.Text())
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-    website = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-
-    def __repr__(self):
-        return f'<Venue {self.id} {self.name}>'
-
-
-class Artist(db.Model):
-    __tablename__ = 'artists'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean())
-    seeking_description = db.Column(db.Text())
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-
-    def __repr__(self):
-        return f'<Artist {self.id} {self.name}>'
-
-
-class Show(db.Model):
-    __tablename__ = 'shows'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    def __repr__(self):
-        return f'<Show {self.id}>'
-
 
 #----------------------------------------------------------------------------#
 # Filters.
