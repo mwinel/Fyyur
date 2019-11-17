@@ -44,19 +44,10 @@ class Venue(Base):
         return f'<Venue {self.id} {self.name}>'
 
 
-class Artist(db.Model):
+class Artist(Base):
     __tablename__ = 'artists'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean())
-    seeking_description = db.Column(db.Text())
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
+    shows = db.relationship('Show', backref='artist', lazy=True)
 
     def __repr__(self):
         return f'<Artist {self.id} {self.name}>'
@@ -68,7 +59,8 @@ class Show(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.String, nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('shows.id'),
-                        nullable=False)
+                         nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('shows.id'))
 
     def __repr__(self):
         return f'<Show {self.id}>'
