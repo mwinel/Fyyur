@@ -13,8 +13,10 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class Venue(db.Model):
-    __tablename__ = 'venues'
+# Define a base model for other database tables to inherit
+class Base(db.Model):
+
+    __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -28,6 +30,15 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     website = db.Column(db.String(120))
     genres = db.Column(db.String(120))
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
+                              onupdate=db.func.current_timestamp())
+
+
+class Venue(Base):
+    __tablename__ = 'venues'
+
+    shows = db.relationship('Show', backref='venue', lazy=True)
 
     def __repr__(self):
         return f'<Venue {self.id} {self.name}>'
@@ -56,6 +67,8 @@ class Show(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.String, nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey('shows.id'),
+                        nullable=False)
 
     def __repr__(self):
         return f'<Show {self.id}>'
