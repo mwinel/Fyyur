@@ -204,6 +204,7 @@ def create_venue_submission():
               request.form['name'] + ' could not be listed.')
     return render_template('pages/home.html')
 
+
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
     # TODO: Complete this endpoint for taking a venue_id, and using
