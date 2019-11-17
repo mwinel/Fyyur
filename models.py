@@ -25,8 +25,6 @@ class Base(db.Model):
     state = db.Column(db.String(120))
     address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean())
-    seeking_description = db.Column(db.Text())
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
     website = db.Column(db.String(120))
@@ -39,6 +37,8 @@ class Base(db.Model):
 class Venue(Base):
     __tablename__ = 'venues'
 
+    seeking_talent = db.Column(db.Boolean(), default=True)
+    seeking_description = db.Column(db.Text())
     shows = db.relationship('Show', backref='venue', lazy=True)
 
     def __repr__(self):
@@ -48,6 +48,8 @@ class Venue(Base):
 class Artist(Base):
     __tablename__ = 'artists'
 
+    seeking_venue = db.Column(db.Boolean(), default=True)
+    seeking_description = db.Column(db.Text())
     shows = db.relationship('Show', backref='artist', lazy=True)
 
     def __repr__(self):
