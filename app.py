@@ -7,6 +7,7 @@ import dateutil.parser
 import babel
 import sys
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from sqlalchemy import inspect
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
@@ -56,31 +57,26 @@ def index():
 #  Venues
 #  ----------------------------------------------------------------
 
+
 @app.route('/venues')
 def venues():
-    # TODO: replace with real venues data.
-    #       num_shows should be aggregated based on number of upcoming shows per venue.
-    data = [{
-        "city": "San Francisco",
-        "state": "CA",
-        "venues": [{
-            "id": 1,
-            "name": "The Musical Hop",
-            "num_upcoming_shows": 0,
-        }, {
-            "id": 3,
-            "name": "Park Square Live Music & Coffee",
-            "num_upcoming_shows": 1,
-        }]
-    }, {
-        "city": "New York",
-        "state": "NY",
-        "venues": [{
-            "id": 2,
-            "name": "The Dueling Pianos Bar",
-            "num_upcoming_shows": 0,
-        }]
-    }]
+    res_result = []
+    query = Venue.query.all()
+    for row in query:
+        city = row.city
+        state = row.state
+        query = db.session.query(Venue).filter(
+            Venue.state == state, Venue.city == city).all()
+        venues = [i for i in query]
+        for i in query:
+            result = {
+                'city': i.city,
+                'state': i.state,
+                'venues': venues
+            }
+        res_result.append(result)
+    data = [i for n, i in enumerate(
+        res_result) if i not in res_result[n + 1:]]
     return render_template('pages/venues.html', areas=data)
 
 
