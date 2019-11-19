@@ -45,6 +45,7 @@
 	<div class="col-sm-6">
 		<img src="{{ venue.image_link }}" alt="Venue Image" />
 	</div>
+	<button onclick="window.location.href='/venues/{{ venue.id }}/edit'" class="btn btn-primary my-4" type="button">Edit</button>
 	<button onclick="deleteRequest('/venues/{{ venue.id }}')" class="btn btn-danger my-4" type="button">Delete</button>
 </div>
 <section>
