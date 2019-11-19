@@ -123,23 +123,19 @@ def show_venue(venue_id):
     if venue:
         data = venue.__dict__
 
-    # Filter past shows
-    past_shows = Show.query.filter_by(venue_id=venue.id).filter(
-        Show.start_time < datetime.utcnow().isoformat()).all()
+    shows = db.session.query(Show).filter_by(venue_id = venue.id).all()
+    for show in shows:
+        # Filter artist past shows
+        past_shows = db.session.query(Show).filter_by(start_time = show.start_time).filter(
+            show.start_time < datetime.utcnow().isoformat()).all()
+        # Format upcoming and past shows
+        upcoming_shows = db.session.query(Show).filter_by(start_time = show.start_time).filter(
+            show.start_time > datetime.utcnow().isoformat()).all()
 
-    # Filter upcoming shows
-    upcoming_shows = Show.query.filter_by(venue_id=venue.id).filter(
-        Show.start_time > datetime.utcnow().isoformat()).all()
-
-    # Format upcoming and past shows
-    past_shows = format_venue_shows(past_shows)
-    upcoming_shows = format_venue_shows(upcoming_shows)
-
-    data['past_shows'] = past_shows
-    data['upcoming_shows'] = upcoming_shows
-    data['past_shows_count'] = len(past_shows)
-    data['upcoming_shows_count'] = len(upcoming_shows)
-
+        data['past_shows'] = past_shows
+        data['upcoming_shows'] = upcoming_shows
+        data['past_shows_count'] = len(past_shows)
+        data['upcoming_shows_count'] = len(upcoming_shows)
     return render_template('pages/show_venue.html', venue=data)
 
 
@@ -272,22 +268,19 @@ def show_artist(artist_id):
     if artist:
         data = artist.__dict__
 
-    # Filter artist past shows
-    past_shows = Show.query.filter_by(artist_id=artist.id).filter(
-        Show.start_time < datetime.utcnow().isoformat()).all()
+    shows = db.session.query(Show).filter_by(artist_id = artist.id).all()
+    for show in shows:
+        # Filter artist past shows
+        past_shows = db.session.query(Show).filter_by(start_time = show.start_time).filter(
+            show.start_time < datetime.utcnow().isoformat()).all()
+        # Format upcoming and past shows
+        upcoming_shows = db.session.query(Show).filter_by(start_time = show.start_time).filter(
+            show.start_time > datetime.utcnow().isoformat()).all()
 
-    # Filter artist upcoming shows
-    upcoming_shows = Show.query.filter_by(artist_id=artist.id).filter(
-        Show.start_time > datetime.utcnow().isoformat()).all()
-
-    # Format upcoming and past shows
-    past_shows = format_artist_shows(past_shows)
-    upcoming_shows = format_artist_shows(upcoming_shows)
-
-    data['past_shows'] = past_shows
-    data['upcoming_shows'] = upcoming_shows
-    data['past_shows_count'] = len(past_shows)
-    data['upcoming_shows_count'] = len(upcoming_shows)
+        data['past_shows'] = past_shows
+        data['upcoming_shows'] = upcoming_shows
+        data['past_shows_count'] = len(past_shows)
+        data['upcoming_shows_count'] = len(upcoming_shows)
     
     return render_template('pages/show_artist.html', artist=data)
 
@@ -421,14 +414,17 @@ def create_shows():
 
 @app.route('/shows/create', methods=['POST'])
 def create_show_submission():
-    # called to create new shows in the db, upon submitting new show listing form
-    # TODO: insert form data as a new Show record in the db, instead
-
-    # on successful db insert, flash success
-    flash('Show was successfully listed!')
-    # TODO: on unsuccessful db insert, flash an error instead.
-    # e.g., flash('An error occurred. Show could not be listed.')
-    # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+    form = ShowForm()
+    try:
+        show = Show(venue_id=form.venue_id.data,
+                        artist_id=form.artist_id.data,
+                        start_time=form.start_time.data 
+                        )
+        db.session.add(show)
+        db.session.commit()
+        flash('Show successfully listed.')
+    except:
+        flash('Something went wrong. The show could not be listed.')
     return render_template('pages/home.html')
 
 
