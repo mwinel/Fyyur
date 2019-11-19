@@ -1,5 +1,5 @@
 {% extends 'layouts/main.html' %}
-{% block title %}Venue Search{% endblock %}
+{% block title %}Venue{% endblock %}
 {% block content %}
 <div class="row">
 	<div class="col-sm-6">
@@ -45,6 +45,7 @@
 	<div class="col-sm-6">
 		<img src="{{ venue.image_link }}" alt="Venue Image" />
 	</div>
+	<button onclick="deleteRequest('/venues/{{ venue.id }}')" class="btn btn-danger my-4" type="button">Delete</button>
 </div>
 <section>
 	<h2 class="monospace">{{ venue.upcoming_shows_count }} Upcoming {% if venue.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
