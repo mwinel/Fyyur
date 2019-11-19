@@ -445,5 +445,3 @@ class ArtistEditForm(Form):
     website = StringField(
         'website', validators=[URL()]
     )
-
-# TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM
