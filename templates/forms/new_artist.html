@@ -24,6 +24,10 @@
       {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
     </div>
     <div class="form-group">
+      <label for="seeking_description">Describe your show</label>
+      {{ form.seeking_description(class_ = 'form-control', placeholder='More details...', id=form.state, autofocus = true) }}
+    </div>
+    <div class="form-group">
       <label for="genres">Genres</label>
       <small>Ctrl+Click to select multiple</small>
       {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', id=form.state, autofocus = true) }}

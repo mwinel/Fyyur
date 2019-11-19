@@ -303,6 +303,9 @@ class ArtistForm(Form):
     phone = StringField(
         'phone', validators=[DataRequired()]
     )
+    seeking_description = TextAreaField(
+        'seeking_description', validators=[DataRequired()]
+    )
     image_link = StringField(
         'image_link'
     )
